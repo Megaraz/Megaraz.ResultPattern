@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>Megaraz.ResultPattern</PackageId>
+    <Title>Megaraz Result Pattern</Title>
+    <Description>A focused Result Pattern library for .NET.</Description>
+    <Authors>Megaraz</Authors>
+    <RepositoryUrl>https://github.com/Megaraz/Megaraz.ResultPattern</RepositoryUrl>
+    <PackageTags>result;result-pattern;errors;validation</PackageTags>
+  </PropertyGroup>
+
+</Project>
