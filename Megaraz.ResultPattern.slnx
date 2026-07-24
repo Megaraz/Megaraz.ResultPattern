@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Megaraz.ResultPattern.Tests/Megaraz.ResultPattern.Tests.csproj" />
   <Project Path="Megaraz.ResultPattern/Megaraz.ResultPattern.csproj" />
 </Solution>

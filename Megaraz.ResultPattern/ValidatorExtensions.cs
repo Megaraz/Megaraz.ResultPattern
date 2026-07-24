@@ -1,4 +1,4 @@
-﻿namespace Rasmus.SharedKernel.ResultPattern
+namespace Megaraz.ResultPattern
 {
     /// <summary>
     /// Validation extension methods that produce <see cref="ValidationError"/> instances.
@@ -11,26 +11,6 @@
     /// </remarks>
     public static class ValidatorExtensions
     {
-
-        /// <summary>
-        /// Returns <see langword="true"/> if <paramref name="value"/> is <see langword="null"/>
-        /// and populates <paramref name="nullValueError"/>. Returns <see langword="false"/> otherwise.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="errorContext"/> is <see langword="null"/>.</exception>
-        public static bool IsNull<TValue>(this TValue? value, ErrorContext errorContext, out ValidationError nullValueError)
-        {
-            ArgumentNullException.ThrowIfNull(errorContext);
-
-            nullValueError = default!;
-
-            if (value is null)
-            {
-                nullValueError = ValidationError.Required(errorContext);
-                return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Returns <see langword="true"/> if any field in <paramref name="requiredValues"/> is null or whitespace
@@ -102,34 +82,18 @@
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> if <paramref name="value"/> is below <paramref name="minValue"/>
-        /// and populates <paramref name="tooLowError"/>. Returns <see langword="false"/> otherwise.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="errorContext"/> is <see langword="null"/>.</exception>
-        public static bool IsTooLow(this int value, int minValue, ErrorContext errorContext, out ValidationError tooLowError)
-        {
-            ArgumentNullException.ThrowIfNull(errorContext);
-
-            tooLowError = default!;
-
-            if (value < minValue)
-            {
-                tooLowError = ValidationError.OutOfRange(errorContext, $">= {minValue}");
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Returns <see langword="true"/> if <paramref name="value1"/> and <paramref name="value2"/> do <b>not</b> match
         /// and populates <paramref name="notMatchingError"/>. Returns <see langword="false"/> if they match.
         /// Comparison is ordinal (case-sensitive).
         /// </summary>
         /// <param name="fieldName">Label for <paramref name="value1"/>, used in error descriptions.</param>
         /// <param name="confirmFieldName">Label for <paramref name="value2"/>, used in error descriptions.</param>
+        /// <param name="value1">The first value.</param>
+        /// <param name="value2">The second value.</param>
+        /// <param name="errorContext">The context used to create the validation error.</param>
+        /// <param name="notMatchingError">The resulting validation error when the values do not match.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="errorContext"/> is <see langword="null"/>.</exception>
-        public static bool DoesNotMatch(this string value1, string value2, string fieldName, string confirmFieldName, ErrorContext errorContext, out ValidationError notMatchingError)
+        public static bool DoesNotMatch(this string? value1, string? value2, string fieldName, string confirmFieldName, ErrorContext errorContext, out ValidationError notMatchingError)
         {
             ArgumentNullException.ThrowIfNull(errorContext);
 

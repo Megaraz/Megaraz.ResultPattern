@@ -14,7 +14,7 @@ public class Result
 
     /// <summary>
     /// Gets the result message. For failures this is normally suitable for presentation,
-    /// while <see cref="PrimaryError.Description"/> remains technical diagnostic detail.
+    /// while <see cref="Error.Description"/> remains technical diagnostic detail.
     /// </summary>
     public string Message { get; }
 

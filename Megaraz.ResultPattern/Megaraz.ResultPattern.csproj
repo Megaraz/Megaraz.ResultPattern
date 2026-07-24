@@ -11,6 +11,11 @@
     <Authors>Megaraz</Authors>
     <RepositoryUrl>https://github.com/Megaraz/Megaraz.ResultPattern</RepositoryUrl>
     <PackageTags>result;result-pattern;errors;validation</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>

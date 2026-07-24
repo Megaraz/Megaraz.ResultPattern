@@ -1,5 +1,6 @@
 namespace Megaraz.ResultPattern;
 
+#pragma warning disable CS0618 // Maintains the obsolete ErrorReasonCode compatibility adapter.
 internal static class ErrorReasonCodeExtensions
 {
     public static string ToCodePart(this ErrorReasonCode reason) => reason switch
@@ -17,6 +18,8 @@ internal static class ErrorReasonCodeExtensions
         ErrorReasonCode.GeneralConflict => "Conflict",
         ErrorReasonCode.GeneralUnauthorized => "Unauthorized",
         ErrorReasonCode.GeneralForbidden => "Forbidden",
-        _ => "Custom"
+        ErrorReasonCode.Custom => "Custom",
+        _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null)
     };
 }
+#pragma warning restore CS0618
