@@ -37,6 +37,20 @@ var validationError = ValidationError.CustomWithReason(
 `Create.User.EmailAlreadyRegistered`; use `ErrorCode.From` when the code shape is
 owned by your application.
 
+## Extension errors
+
+`ErrorType.External` is intended for errors supplied by extension packages or
+external dependencies. Extension packages can derive from `Error` and expose
+their own detailed error enum while using `External` as the shared top-level
+classification:
+
+```csharp
+var error = Error.Custom(
+    ErrorCode.From("payments.gateway-timeout"),
+    "The payment gateway did not respond in time.",
+    ErrorType.External);
+```
+
 `ErrorContext` requires a defined operation and a non-blank logical entity or
 resource name. Its optional `FieldName` is metadata for validation and
 presentation; it is not part of conventional error codes and may use labels

@@ -18,7 +18,9 @@ public enum ErrorType
     /// <summary>The caller was not authorized.</summary>
     Forbidden = 6,
     /// <summary>An operation was cancelled.</summary>
-    Cancelled = 7
+    Cancelled = 7,
+    /// <summary>An error supplied by an extension package or external dependency.</summary>
+    External = 8
 }
 
 /// <summary>

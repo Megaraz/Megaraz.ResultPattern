@@ -25,6 +25,14 @@ public class ErrorTests
     }
 
     [Fact]
+    public void CustomAcceptsExternalTypeForExtensionErrors()
+    {
+        var error = ResultError.Custom("external.timeout", "Dependency timed out.", ErrorType.External);
+
+        Assert.Equal(ErrorType.External, error.Type);
+    }
+
+    [Fact]
     public void CustomWithContextCreatesConventionalCode()
     {
         var error = ResultError.Custom(TestData.Context, "Broken", ErrorType.Failure, "technical");
