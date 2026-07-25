@@ -204,18 +204,9 @@ public record Error
             messageFactory: messageFactory);
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns a concise diagnostic representation of the error.</summary>
     public override string ToString() =>
-        $"Error Code: {Code}{Environment.NewLine}Description: {Description}";
-
-    /// <summary>
-    /// Returns the technical description without imposing an application-specific logging format.
-    /// </summary>
-    protected static string FormatDescription(ErrorContext errorContext, string description)
-    {
-        ArgumentNullException.ThrowIfNull(errorContext);
-        return description;
-    }
+        string.IsNullOrEmpty(Code) ? Description : $"{Code}: {Description}";
 
     private static Error Create(
         ErrorContext context,
@@ -231,6 +222,6 @@ public record Error
         if (string.IsNullOrWhiteSpace(description))
             throw new ArgumentException("The message factory must return a non-blank message.", nameof(messageFactory));
 
-        return Custom(code.Code, FormatDescription(context, description), type, userMessage ?? string.Empty, exception);
+        return Custom(code.Code, description, type, userMessage ?? string.Empty, exception);
     }
 }

@@ -71,14 +71,18 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
     context-aware message factories; omitted user messages remain empty, and
     result validation failures no longer impose an English presentation message.
 
-- [ ] **P1 — Remove or replace `FormatDescription`**
+- [x] **P1 — Remove or replace `FormatDescription`**
   - It is currently a non-overridable no-op and provides no real extension point.
   - Delete it or replace it with an intentional, documented formatting strategy.
+  - Completed: removed the no-op helper and pass validated descriptions directly to
+    the error constructors.
 
-- [ ] **P1 — Reconsider `Error.ToString()`**
+- [x] **P1 — Reconsider `Error.ToString()`**
   - Do not impose a logging/serialization format from the core package.
   - Either provide a concise diagnostic representation or leave formatting to
     logging and integration adapters.
+  - Completed: `ToString()` now returns a concise `Code: Description` diagnostic
+    representation without the previous labeled multi-line format.
 
 - [ ] **P1 — Improve validation API ergonomics**
   - Reassess methods that return `true` when validation fails despite names that

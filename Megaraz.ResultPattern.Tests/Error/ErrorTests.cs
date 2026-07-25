@@ -157,7 +157,7 @@ public class ErrorTests
     public void ToStringUsesCodeAndDescriptionLayout()
     {
         var text = ResultError.Custom("A.Code", "Details", ErrorType.Failure).ToString();
-        Assert.Equal($"Error Code: A.Code{Environment.NewLine}Description: Details", text);
+        Assert.Equal("A.Code: Details", text);
     }
 
     private sealed record InvalidValidationError : Megaraz.ResultPattern.Error

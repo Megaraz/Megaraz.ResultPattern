@@ -52,7 +52,7 @@ public sealed record ValidationError : Error
         ArgumentNullException.ThrowIfNull(errorContext);
         var code = ErrorCode.For(errorContext, "Custom");
         var resolvedFieldName = fieldName ?? errorContext.FieldName;
-        return new(code.Code, FormatDescription(errorContext, description), ValidationErrorType.Custom,
+        return new(code.Code, description, ValidationErrorType.Custom,
             userMessage ?? description, resolvedFieldName);
     }
 
@@ -67,7 +67,7 @@ public sealed record ValidationError : Error
         ArgumentNullException.ThrowIfNull(errorContext);
         ArgumentNullException.ThrowIfNull(code);
         var resolvedFieldName = fieldName ?? errorContext.FieldName;
-        return new(code.Code, FormatDescription(errorContext, description), ValidationErrorType.Custom,
+        return new(code.Code, description, ValidationErrorType.Custom,
             userMessage ?? description, resolvedFieldName);
     }
 
@@ -197,6 +197,6 @@ public sealed record ValidationError : Error
         if (string.IsNullOrWhiteSpace(description))
             throw new ArgumentException("The message factory must return a non-blank message.", nameof(messageFactory));
 
-        return new(code.Code, FormatDescription(context, description), type, userMessage ?? string.Empty, context.FieldName);
+        return new(code.Code, description, type, userMessage ?? string.Empty, context.FieldName);
     }
 }
