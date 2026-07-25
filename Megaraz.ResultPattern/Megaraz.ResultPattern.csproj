@@ -12,11 +12,20 @@
     <Authors>Megaraz</Authors>
     <Copyright>Copyright (c) 2026 Megaraz</Copyright>
     <RepositoryUrl>https://github.com/Megaraz/Megaraz.ResultPattern</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Megaraz/Megaraz.ResultPattern</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>result;result-pattern;errors;validation</PackageTags>
+    <PackageReleaseNotes>Initial release of the Result Pattern library for .NET.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
