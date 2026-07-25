@@ -6,10 +6,13 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>Megaraz.ResultPattern</PackageId>
+    <Version>0.1.0</Version>
     <Title>Megaraz Result Pattern</Title>
     <Description>A focused Result Pattern library for .NET.</Description>
     <Authors>Megaraz</Authors>
+    <Copyright>Copyright (c) 2026 Megaraz</Copyright>
     <RepositoryUrl>https://github.com/Megaraz/Megaraz.ResultPattern</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Megaraz/Megaraz.ResultPattern</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>result;result-pattern;errors;validation</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
