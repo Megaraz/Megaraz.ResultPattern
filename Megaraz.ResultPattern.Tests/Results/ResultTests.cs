@@ -53,7 +53,7 @@ public class ResultTests
     public void ValidationFailureUsesDefaultForBlankMessage(string? message)
     {
         var result = Result.ValidationFailure(new[] { TestData.ValidationError }, message);
-        Assert.Equal("Validation errors occurred, see validation errors for details.", result.Message);
+        Assert.Empty(result.Message);
     }
 
     [Fact]

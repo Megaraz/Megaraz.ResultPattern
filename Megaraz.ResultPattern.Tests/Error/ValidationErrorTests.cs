@@ -73,6 +73,19 @@ public class ValidationErrorTests
     }
 
     [Fact]
+    public void BuiltInValidationFactoriesAcceptLocalizedDescriptions()
+    {
+        var error = ValidationError.InvalidFormat(
+            TestData.FieldContext,
+            "email",
+            userMessage: "friendly",
+            messageFactory: context => $"localized {context.FieldName}");
+
+        Assert.Equal("localized Email", error.Description);
+        Assert.Equal("friendly", error.UserMessage);
+    }
+
+    [Fact]
     public void NonMatchingValuesSupportsLabelsAndCustomMessage()
     {
         var both = ValidationError.NonMatchingValues(TestData.FieldContext, "ConfirmEmail", "friendly");

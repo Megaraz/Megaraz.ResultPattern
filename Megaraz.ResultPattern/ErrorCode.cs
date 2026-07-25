@@ -98,8 +98,8 @@ public sealed record ErrorCode
     public static ErrorCode For(ErrorContext errorContext, string reason)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
-        ValidatePart(errorContext.EntityName, nameof(errorContext));
-        ValidatePart(reason, nameof(reason));
+        errorContext.Validate();
+        ValidateReason(reason);
         return From($"{GetOperationPart(errorContext.Operation)}.{errorContext.EntityName}.{reason}");
     }
 
@@ -108,10 +108,10 @@ public sealed record ErrorCode
     public static ErrorCode For(ErrorContext errorContext, ErrorReasonCode reason) =>
         For(errorContext, reason.ToCodePart());
 
-    private static void ValidatePart(string value, string parameterName)
+    private static void ValidateReason(string reason)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Contains('.'))
-            throw new ArgumentException("Code parts cannot be null, empty, whitespace, or contain '.'.", parameterName);
+        if (string.IsNullOrWhiteSpace(reason) || reason.Contains('.'))
+            throw new ArgumentException("Reason cannot be null, empty, whitespace, or contain '.'.", nameof(reason));
     }
 
     private static string GetOperationPart(OperationType operation) => operation switch

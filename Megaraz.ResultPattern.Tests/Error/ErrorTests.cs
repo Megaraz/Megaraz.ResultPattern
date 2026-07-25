@@ -90,7 +90,7 @@ public class ErrorTests
             Assert.Equal(type, error.Type);
             Assert.Equal($"Get.User.{reason}", error.Code);
             Assert.Equal(message, error.Description);
-            Assert.Equal(message, error.UserMessage);
+            Assert.Empty(error.UserMessage);
         }
     }
 
@@ -106,7 +106,7 @@ public class ErrorTests
     {
         var defaultError = ResultError.Failure(TestData.Context);
         Assert.Equal("An unexpected failure occurred while processing User.", defaultError.Description);
-        Assert.Equal(defaultError.Description, defaultError.UserMessage);
+        Assert.Empty(defaultError.UserMessage);
 
         var exception = new Exception("x");
         var explicitError = ResultError.Failure(TestData.Context, "technical", exception, "friendly");
@@ -124,6 +124,20 @@ public class ErrorTests
         Assert.Throws<ArgumentNullException>(() => ResultError.Forbidden(null!));
         Assert.Throws<ArgumentNullException>(() => ResultError.Failure(null!));
         Assert.Throws<ArgumentNullException>(() => ResultError.Cancelled(null!));
+    }
+
+    [Fact]
+    public void BuiltInFactoriesAcceptLocalizedDescriptionsAndUserMessages()
+    {
+        var context = TestData.FieldContext;
+
+        var notFound = ResultError.NotFound(context, "friendly", _ => "localized not found");
+        Assert.Equal("localized not found", notFound.Description);
+        Assert.Equal("friendly", notFound.UserMessage);
+
+        var failure = ResultError.Failure(context, messageFactory: _ => "localized failure");
+        Assert.Equal("localized failure", failure.Description);
+        Assert.Empty(failure.UserMessage);
     }
 
     [Fact]

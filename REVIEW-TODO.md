@@ -49,19 +49,27 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
     `ErrorCode.For` and `ValidationError.CustomWithReason` provide the optional
     conventional shape. Built-in reason strings are explicit constants.
 
-- [ ] **P1 — Validate and simplify `ErrorContext`**
+- [x] **P1 — Validate and simplify `ErrorContext`**
   - Validate required entity/resource names and decide how field names behave.
   - Prevent malformed codes such as `Create..NotFound`.
   - Reconsider `NameOfEntity`; prefer clearer terminology such as `Entity`,
     `Resource`, or `ResourceName`.
   - Separate machine metadata from display/presentation labels where needed.
+  - Completed: `ErrorContext` validates operation, entity, and optional field
+    values; entity names cannot create malformed conventional codes, while
+    field names remain optional metadata and are excluded from code generation.
+    `EntityName` is retained as the established public name and documented as
+    covering logical resources.
 
-- [ ] **P1 — Remove application-specific message assumptions**
+- [x] **P1 — Remove application-specific message assumptions**
   - Keep the core package framework-neutral and avoid requiring English,
     UI-oriented wording.
   - Allow caller-supplied messages or message factories for all built-in
     error kinds.
   - Define how localization and API-specific presentation belong in extensions.
+  - Completed: built-in factories accept caller-supplied user messages and
+    context-aware message factories; omitted user messages remain empty, and
+    result validation failures no longer impose an English presentation message.
 
 - [ ] **P1 — Remove or replace `FormatDescription`**
   - It is currently a non-overridable no-op and provides no real extension point.

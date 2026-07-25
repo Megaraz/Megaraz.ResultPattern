@@ -129,35 +129,51 @@ public record Error
         true);
 
     /// <summary>Creates a not-found error.</summary>
-    public static Error NotFound(ErrorContext errorContext)
+    public static Error NotFound(
+        ErrorContext errorContext,
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
         var message = $"{errorContext.EntityName} not found";
-        return Create(errorContext, ErrorCodeReasons.NotFound, ErrorType.NotFound, message);
+        return Create(errorContext, ErrorCodeReasons.NotFound, ErrorType.NotFound, message, userMessage: userMessage,
+            messageFactory: messageFactory);
     }
 
     /// <summary>Creates a conflict error.</summary>
-    public static Error Conflict(ErrorContext errorContext)
+    public static Error Conflict(
+        ErrorContext errorContext,
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
         var message = $"Unique {errorContext.EntityName} constraint violated.";
-        return Create(errorContext, ErrorCodeReasons.Conflict, ErrorType.Conflict, message);
+        return Create(errorContext, ErrorCodeReasons.Conflict, ErrorType.Conflict, message, userMessage: userMessage,
+            messageFactory: messageFactory);
     }
 
     /// <summary>Creates an unauthorized error.</summary>
-    public static Error Unauthorized(ErrorContext errorContext)
+    public static Error Unauthorized(
+        ErrorContext errorContext,
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
         var message = "Unauthorized access" +
             (string.IsNullOrWhiteSpace(errorContext.FieldName) ? string.Empty : $" to {errorContext.FieldName}");
-        return Create(errorContext, ErrorCodeReasons.Unauthorized, ErrorType.Unauthorized, message);
+        return Create(errorContext, ErrorCodeReasons.Unauthorized, ErrorType.Unauthorized, message, userMessage: userMessage,
+            messageFactory: messageFactory);
     }
 
     /// <summary>Creates a forbidden error.</summary>
-    public static Error Forbidden(ErrorContext errorContext)
+    public static Error Forbidden(
+        ErrorContext errorContext,
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
-        return Create(errorContext, ErrorCodeReasons.Forbidden, ErrorType.Forbidden, "Forbidden access.");
+        return Create(errorContext, ErrorCodeReasons.Forbidden, ErrorType.Forbidden, "Forbidden access.",
+            userMessage: userMessage, messageFactory: messageFactory);
     }
 
     /// <summary>Creates a general failure error.</summary>
@@ -165,21 +181,27 @@ public record Error
         ErrorContext errorContext,
         string? description = null,
         Exception? exception = null,
-        string? userMessage = null)
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
         var message = string.IsNullOrWhiteSpace(description)
             ? $"An unexpected failure occurred while processing {errorContext.EntityName}."
             : description;
-        return Create(errorContext, ErrorCodeReasons.Failure, ErrorType.Failure, message, exception, userMessage);
+        return Create(errorContext, ErrorCodeReasons.Failure, ErrorType.Failure, message, exception, userMessage,
+            messageFactory);
     }
 
     /// <summary>Creates an operation-cancelled error.</summary>
-    public static Error Cancelled(ErrorContext errorContext)
+    public static Error Cancelled(
+        ErrorContext errorContext,
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
         var message = $"The operation on {errorContext.EntityName} was cancelled.";
-        return Create(errorContext, ErrorCodeReasons.Cancelled, ErrorType.Cancelled, message);
+        return Create(errorContext, ErrorCodeReasons.Cancelled, ErrorType.Cancelled, message, userMessage: userMessage,
+            messageFactory: messageFactory);
     }
 
     /// <inheritdoc />
@@ -201,9 +223,14 @@ public record Error
         ErrorType type,
         string message,
         Exception? exception = null,
-        string? userMessage = null)
+        string? userMessage = null,
+        Func<ErrorContext, string>? messageFactory = null)
     {
         var code = ErrorCode.For(context, reason);
-        return Custom(code.Code, FormatDescription(context, message), type, userMessage ?? message, exception);
+        var description = messageFactory is null ? message : messageFactory(context);
+        if (string.IsNullOrWhiteSpace(description))
+            throw new ArgumentException("The message factory must return a non-blank message.", nameof(messageFactory));
+
+        return Custom(code.Code, FormatDescription(context, description), type, userMessage ?? string.Empty, exception);
     }
 }

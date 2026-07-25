@@ -49,7 +49,7 @@ public class ResultOfTTests
     {
         var result = Result<string>.ValidationFailure(new[] { TestData.ValidationError }, message);
         Assert.True(result.IsFailure);
-        Assert.Equal("Validation errors occurred, see validation errors for details.", result.Message);
+        Assert.Empty(result.Message);
         Assert.Same(TestData.ValidationError, result.PrimaryError);
         Assert.Throws<InvalidOperationException>(() => result.Value);
     }

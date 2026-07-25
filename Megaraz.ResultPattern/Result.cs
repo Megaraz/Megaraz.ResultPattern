@@ -3,9 +3,6 @@ namespace Megaraz.ResultPattern;
 /// <summary>Represents the outcome of an operation without a return value.</summary>
 public class Result
 {
-    private const string DefaultValidationFailureMessage =
-        "Validation errors occurred, see validation errors for details.";
-
     /// <summary>Gets whether the operation completed successfully.</summary>
     public bool IsSuccess { get; }
 
@@ -89,7 +86,7 @@ public class Result
         if (errors.Any(error => error is null))
             throw new ArgumentException("A validation failure cannot contain null validation errors.", nameof(validationErrors));
 
-        return new(false, string.IsNullOrWhiteSpace(message) ? DefaultValidationFailureMessage : message, errors, errors[0]);
+        return new(false, string.IsNullOrWhiteSpace(message) ? string.Empty : message, errors, errors[0]);
     }
 
     /// <summary>Creates a failure using the error's user-facing message.</summary>
@@ -153,7 +150,7 @@ public sealed class Result<TValue> : Result where TValue : notnull
             throw new ArgumentException("A validation failure cannot contain null validation errors.", nameof(validationErrors));
 
         return new(
-            string.IsNullOrWhiteSpace(message) ? "Validation errors occurred, see validation errors for details." : message,
+            string.IsNullOrWhiteSpace(message) ? string.Empty : message,
             errors,
             errors[0]);
     }

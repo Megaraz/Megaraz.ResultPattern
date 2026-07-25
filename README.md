@@ -37,6 +37,16 @@ var validationError = ValidationError.CustomWithReason(
 `Create.User.EmailAlreadyRegistered`; use `ErrorCode.From` when the code shape is
 owned by your application.
 
+`ErrorContext` requires a defined operation and a non-blank logical entity or
+resource name. Its optional `FieldName` is metadata for validation and
+presentation; it is not part of conventional error codes and may use labels
+such as `Profile.Email`.
+
+Built-in error factories provide technical fallback descriptions, but do not
+assume a presentation language: `UserMessage` is empty unless supplied. Use the
+optional `messageFactory` argument to create localized or application-specific
+descriptions in an extension or application layer.
+
 Install from NuGet:
 
 ```bash

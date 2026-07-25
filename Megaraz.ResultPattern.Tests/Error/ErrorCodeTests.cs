@@ -37,8 +37,7 @@ public class ErrorCodeTests
     [InlineData("User.Name")]
     public void For_RejectsInvalidEntityOrReason(string part)
     {
-        var context = new ErrorContext(OperationType.Create, part);
-        Assert.Throws<ArgumentException>(() => ErrorCode.For(context, ErrorCodeReasons.Required));
+        Assert.Throws<ArgumentException>(() => new ErrorContext(OperationType.Create, part));
         Assert.Throws<ArgumentException>(() => ErrorCode.For(new ErrorContext(OperationType.Create, "User"), part));
     }
 
