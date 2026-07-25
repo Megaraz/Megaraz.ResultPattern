@@ -46,4 +46,29 @@ public class ResultExtensionsTests
         Assert.Same(exception, Assert.Throws<InvalidOperationException>(() =>
             Result<int>.Success(1).Map<int, int>(_ => throw exception)));
     }
+
+    [Fact]
+    public async Task MapAsyncPreservesSuccessAndFailure()
+    {
+        var success = await Result<int>.Success(3)
+            .MapAsync(value => Task.FromResult(value.ToString()));
+        Assert.Equal("3", success.Value);
+
+        var failure = Result<string>.Failure(TestData.Error, "message");
+        var mappedFailure = await failure.MapAsync(value => Task.FromResult(value.Length));
+        Assert.Equal("message", mappedFailure.Message);
+        Assert.Same(TestData.Error, mappedFailure.PrimaryError);
+    }
+
+    [Fact]
+    public void ResultConversionsAllowTypedUpcastAndFailureDowncastOnly()
+    {
+        Result untyped = Result<int>.Success(3);
+        Assert.True(untyped.IsSuccess);
+
+        var typed = Result<int>.FromResult(Result.Failure(TestData.Error, "message"));
+        Assert.Equal("message", typed.Message);
+        Assert.Throws<ArgumentException>(() => Result<int>.FromResult(Result.Success()));
+    }
+
 }

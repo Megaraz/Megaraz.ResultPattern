@@ -119,6 +119,7 @@ public class Result
         ArgumentNullException.ThrowIfNull(message);
         return new(false, message, Array.Empty<ValidationError>(), primaryError);
     }
+
 }
 
 /// <summary>Represents the outcome of an operation with a non-null return value.</summary>
@@ -200,6 +201,15 @@ public sealed class Result<TValue> : Result where TValue : notnull
         ArgumentNullException.ThrowIfNull(primaryError);
         ArgumentNullException.ThrowIfNull(message);
         return new(message, Array.Empty<ValidationError>(), primaryError);
+    }
+
+    /// <summary>Converts a failed non-generic result to a typed result.</summary>
+    public static Result<TValue> FromResult(Result result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        if (result.IsSuccess)
+            throw new ArgumentException("A successful result cannot be converted without a value.", nameof(result));
+        return FromFailure(result.Message, result.ValidationErrors, result.PrimaryError);
     }
 
     internal static Result<TValue> FromFailure(

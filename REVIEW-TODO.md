@@ -107,6 +107,10 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
     `Ensure`, async variants, result combination, and conversions between
     `Result` and `Result<T>`.
   - Avoid publishing a stable 1.0 API before this scope is intentional.
+  - Current decision: keep the core surface focused on the existing APIs plus
+    async `Map` and explicit failure-only conversion from `Result` to `Result<T>`.
+    Defer additional combinators and result aggregation until a concrete need
+    emerges.
 
 - [ ] **P2 — Improve package metadata and packaging**
   - Add copyright, project URL, explicit versioning, symbols/source link, and
