@@ -97,9 +97,10 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
     required checks remain first-class behavior for matching validation, field
     fallback no longer uses `"value"`, and blank format/range descriptors are rejected.
 
-- [ ] **P2 — Make collection contracts express ordering**
-  - Consider exposing `ValidationErrors` as `IReadOnlyList<ValidationError>` since
-    the first item is defined as the primary validation error.
+- [x] **P2 — Make collection contracts express ordering**
+  - `ValidationErrors` is exposed as `IReadOnlyList<ValidationError>` since the
+    first item is defined as the primary validation error. The read-only contract
+    preserves result immutability while providing indexed access.
 
 - [ ] **P1 — Define the intended Result API surface**
   - Decide whether the core needs `Bind`/`FlatMap`, `Match`, `MapError`, `Tap`,

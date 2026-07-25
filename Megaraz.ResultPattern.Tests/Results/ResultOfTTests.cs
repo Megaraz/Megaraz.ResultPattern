@@ -47,7 +47,9 @@ public class ResultOfTTests
     [InlineData(" ")]
     public void ValidationFailureUsesDefaultMessage(string? message)
     {
-        var result = Result<string>.ValidationFailure(new[] { TestData.ValidationError }, message);
+        var result = Result<string>.ValidationFailure(
+            new List<ValidationError> { TestData.ValidationError },
+            message);
         Assert.True(result.IsFailure);
         Assert.Empty(result.Message);
         Assert.Same(TestData.ValidationError, result.PrimaryError);

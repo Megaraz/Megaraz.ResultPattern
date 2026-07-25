@@ -40,9 +40,11 @@ public class ResultTests
     {
         var first = ValidationError.Required(TestData.FieldContext);
         var second = ValidationError.InvalidFormat(TestData.FieldContext, "email");
-        var result = Result.ValidationFailure(new[] { first, second }, "invalid input");
+        var result = Result.ValidationFailure(new List<ValidationError> { first, second }, "invalid input");
         Assert.Equal("invalid input", result.Message);
         Assert.Same(first, result.PrimaryError);
+        Assert.Equal(first, result.ValidationErrors[0]);
+        Assert.Equal(second, result.ValidationErrors[1]);
         Assert.Equal(new[] { first, second }, result.ValidationErrors);
     }
 

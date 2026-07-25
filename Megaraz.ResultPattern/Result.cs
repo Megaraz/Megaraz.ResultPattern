@@ -18,7 +18,7 @@ public class Result
     /// <summary>
     /// Gets validation errors. This collection is empty for successful and non-validation failures.
     /// </summary>
-    public IReadOnlyCollection<ValidationError> ValidationErrors { get; }
+    public IReadOnlyList<ValidationError> ValidationErrors { get; }
 
     /// <summary>
     /// Gets the primary error. This is <see cref="Error.None"/> for successful results.
@@ -29,7 +29,7 @@ public class Result
     internal Result(
         bool isSuccess,
         string message,
-        IReadOnlyCollection<ValidationError> validationErrors,
+        IReadOnlyList<ValidationError> validationErrors,
         Error primaryError)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -80,11 +80,27 @@ public class Result
         string? message = null)
     {
         ArgumentNullException.ThrowIfNull(validationErrors);
-        var errors = validationErrors.ToArray();
+        return ValidationFailureCore(validationErrors.ToArray(), message, nameof(validationErrors));
+    }
+
+    /// <summary>Creates a validation failure from an indexed validation-error list.</summary>
+    public static Result ValidationFailure(
+        IReadOnlyList<ValidationError> validationErrors,
+        string? message = null)
+    {
+        ArgumentNullException.ThrowIfNull(validationErrors);
+        return ValidationFailureCore(validationErrors.ToArray(), message, nameof(validationErrors));
+    }
+
+    private static Result ValidationFailureCore(
+        ValidationError[] errors,
+        string? message,
+        string parameterName)
+    {
         if (errors.Length == 0)
-            throw new ArgumentException("A validation failure must contain at least one validation error.", nameof(validationErrors));
+            throw new ArgumentException("A validation failure must contain at least one validation error.", parameterName);
         if (errors.Any(error => error is null))
-            throw new ArgumentException("A validation failure cannot contain null validation errors.", nameof(validationErrors));
+            throw new ArgumentException("A validation failure cannot contain null validation errors.", parameterName);
 
         return new(false, string.IsNullOrWhiteSpace(message) ? string.Empty : message, errors, errors[0]);
     }
@@ -125,7 +141,7 @@ public sealed class Result<TValue> : Result where TValue : notnull
         _value = value;
     }
 
-    private Result(string message, IReadOnlyCollection<ValidationError> validationErrors, Error primaryError)
+    private Result(string message, IReadOnlyList<ValidationError> validationErrors, Error primaryError)
         : base(false, message, validationErrors, primaryError)
     {
     }
@@ -143,11 +159,27 @@ public sealed class Result<TValue> : Result where TValue : notnull
         string? message = null)
     {
         ArgumentNullException.ThrowIfNull(validationErrors);
-        var errors = validationErrors.ToArray();
+        return ValidationFailureCore(validationErrors.ToArray(), message, nameof(validationErrors));
+    }
+
+    /// <summary>Creates a validation failure from an indexed validation-error list.</summary>
+    public new static Result<TValue> ValidationFailure(
+        IReadOnlyList<ValidationError> validationErrors,
+        string? message = null)
+    {
+        ArgumentNullException.ThrowIfNull(validationErrors);
+        return ValidationFailureCore(validationErrors.ToArray(), message, nameof(validationErrors));
+    }
+
+    private static Result<TValue> ValidationFailureCore(
+        ValidationError[] errors,
+        string? message,
+        string parameterName)
+    {
         if (errors.Length == 0)
-            throw new ArgumentException("A validation failure must contain at least one validation error.", nameof(validationErrors));
+            throw new ArgumentException("A validation failure must contain at least one validation error.", parameterName);
         if (errors.Any(error => error is null))
-            throw new ArgumentException("A validation failure cannot contain null validation errors.", nameof(validationErrors));
+            throw new ArgumentException("A validation failure cannot contain null validation errors.", parameterName);
 
         return new(
             string.IsNullOrWhiteSpace(message) ? string.Empty : message,
@@ -172,7 +204,7 @@ public sealed class Result<TValue> : Result where TValue : notnull
 
     internal static Result<TValue> FromFailure(
         string message,
-        IReadOnlyCollection<ValidationError> validationErrors,
+        IReadOnlyList<ValidationError> validationErrors,
         Error primaryError) =>
         new(message, validationErrors, primaryError);
 }
