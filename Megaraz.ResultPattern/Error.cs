@@ -53,8 +53,12 @@ public record Error
                 throw new ArgumentException("Error code cannot be null, empty, or whitespace.", nameof(code));
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Error description cannot be null, empty, or whitespace.", nameof(description));
+            if (!Enum.IsDefined(type))
+                throw new ArgumentOutOfRangeException(nameof(type), type, "The error type must be a defined value.");
             if (type == ErrorType.None)
                 throw new ArgumentException("ErrorType.None is reserved for Error.None.", nameof(type));
+            if (type == ErrorType.Validation && this is not ValidationError)
+                throw new ArgumentException("Validation errors must be created with ValidationError.", nameof(type));
         }
 
         Code = code;
@@ -72,6 +76,9 @@ public record Error
         string? userMessage = null,
         Exception? exception = null)
     {
+        if (type == ErrorType.Validation)
+            throw new ArgumentException("Validation errors must be created with ValidationError.", nameof(type));
+
         return new(code, description, type, userMessage ?? string.Empty, exception, false);
     }
 

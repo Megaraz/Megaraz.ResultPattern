@@ -13,18 +13,23 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
 
 ## Backlog
 
-- [ ] **P0 — Define and test the error invariants**
+- [x] **P0 — Define and test the error invariants**
   - Prevent `Error.Custom(..., ErrorType.Validation)` from creating an invalid
     plain `Error`, or provide a valid custom-validation path.
   - Reject undefined enum values where appropriate.
   - Test all success/failure/validation combinations and invalid construction.
+  - Completed: plain validation errors are rejected in favor of `ValidationError`;
+    error-operation and legacy-reason enum values are validated; result-state
+    invariants are covered by multi-targeted tests.
 
-- [ ] **P0 — Add comprehensive automated tests**
+- [x] **P0 — Add comprehensive automated tests**
   - Cover factories, null handling, validation aggregation, primary errors,
     `Map`, exception propagation, equality, immutability, and edge cases.
   - Add tests for every supported target framework.
+  - Completed: the executable test plan covers all public API surfaces across
+    net8.0, net9.0, and net10.0.
 
-- [ ] **P0 — Choose supported target frameworks**
+- [x] **P0 — Choose supported target frameworks**
   - Do not remain `net10.0`-only unless this is an explicit product decision.
   - Prefer supported .NET targets such as `net8.0;net9.0;net10.0`, or assess
     `netstandard2.1` if broader compatibility is required.

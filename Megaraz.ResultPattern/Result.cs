@@ -86,6 +86,8 @@ public class Result
         var errors = validationErrors.ToArray();
         if (errors.Length == 0)
             throw new ArgumentException("A validation failure must contain at least one validation error.", nameof(validationErrors));
+        if (errors.Any(error => error is null))
+            throw new ArgumentException("A validation failure cannot contain null validation errors.", nameof(validationErrors));
 
         return new(false, string.IsNullOrWhiteSpace(message) ? DefaultValidationFailureMessage : message, errors, errors[0]);
     }
@@ -147,6 +149,8 @@ public sealed class Result<TValue> : Result where TValue : notnull
         var errors = validationErrors.ToArray();
         if (errors.Length == 0)
             throw new ArgumentException("A validation failure must contain at least one validation error.", nameof(validationErrors));
+        if (errors.Any(error => error is null))
+            throw new ArgumentException("A validation failure cannot contain null validation errors.", nameof(validationErrors));
 
         return new(
             string.IsNullOrWhiteSpace(message) ? "Validation errors occurred, see validation errors for details." : message,

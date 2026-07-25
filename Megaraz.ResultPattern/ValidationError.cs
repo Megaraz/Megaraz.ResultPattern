@@ -81,51 +81,70 @@ public sealed record ValidationError : Error
         Custom(errorContext, ErrorCode.For(errorContext, reason), description, userMessage, fieldName);
 
     /// <summary>Creates a required-value validation error.</summary>
-    public static ValidationError Required(ErrorContext errorContext, string? userMessage = null) =>
-        Create(errorContext, ErrorCodeReasons.Required, ValidationErrorType.Required,
+    public static ValidationError Required(ErrorContext errorContext, string? userMessage = null)
+    {
+        ArgumentNullException.ThrowIfNull(errorContext);
+        return Create(errorContext, ErrorCodeReasons.Required, ValidationErrorType.Required,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"A value for '{errorContext.EntityName}' is required."
                 : $"A value for '{errorContext.FieldName}' is required.",
             userMessage);
+    }
 
     /// <summary>Creates an invalid-format validation error.</summary>
-    public static ValidationError InvalidFormat(ErrorContext errorContext, string expectedFormat, string? userMessage = null) =>
-        Create(errorContext, ErrorCodeReasons.InvalidFormat, ValidationErrorType.InvalidFormat,
+    public static ValidationError InvalidFormat(ErrorContext errorContext, string expectedFormat, string? userMessage = null)
+    {
+        ArgumentNullException.ThrowIfNull(errorContext);
+        return Create(errorContext, ErrorCodeReasons.InvalidFormat, ValidationErrorType.InvalidFormat,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value has an invalid format. Expected format: {expectedFormat}."
                 : $"The field '{errorContext.FieldName}' has an invalid format. Expected format: {expectedFormat}.", userMessage);
+    }
 
     /// <summary>Creates an out-of-range validation error.</summary>
-    public static ValidationError OutOfRange(ErrorContext errorContext, string range, string? userMessage = null) =>
-        Create(errorContext, ErrorCodeReasons.OutOfRange, ValidationErrorType.OutOfRange,
+    public static ValidationError OutOfRange(ErrorContext errorContext, string range, string? userMessage = null)
+    {
+        ArgumentNullException.ThrowIfNull(errorContext);
+        return Create(errorContext, ErrorCodeReasons.OutOfRange, ValidationErrorType.OutOfRange,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value is out of range. Expected range: {range}."
                 : $"The field '{errorContext.FieldName}' is out of range. Expected range: {range}.", userMessage);
+    }
 
     /// <summary>Creates a minimum-length validation error.</summary>
-    public static ValidationError TooShort(ErrorContext errorContext, string range, string? userMessage = null) =>
-        Create(errorContext, ErrorCodeReasons.TooShort, ValidationErrorType.TooShort,
+    public static ValidationError TooShort(ErrorContext errorContext, string range, string? userMessage = null)
+    {
+        ArgumentNullException.ThrowIfNull(errorContext);
+        return Create(errorContext, ErrorCodeReasons.TooShort, ValidationErrorType.TooShort,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value is too short. Expected minimum length: {range}."
                 : $"The field '{errorContext.FieldName}' is too short. Expected minimum length: {range}.", userMessage);
+    }
 
     /// <summary>Creates a maximum-length validation error.</summary>
-    public static ValidationError TooLong(ErrorContext errorContext, string range, string? userMessage = null) =>
-        Create(errorContext, ErrorCodeReasons.TooLong, ValidationErrorType.TooLong,
+    public static ValidationError TooLong(ErrorContext errorContext, string range, string? userMessage = null)
+    {
+        ArgumentNullException.ThrowIfNull(errorContext);
+        return Create(errorContext, ErrorCodeReasons.TooLong, ValidationErrorType.TooLong,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value is too long. Expected maximum length: {range}."
                 : $"The field '{errorContext.FieldName}' is too long. Expected maximum length: {range}.", userMessage);
+    }
 
     /// <summary>Creates an already-exists validation error.</summary>
-    public static ValidationError AlreadyExists(ErrorContext errorContext, string? userMessage = null) =>
-        Create(errorContext, ErrorCodeReasons.AlreadyExists, ValidationErrorType.AlreadyExists,
+    public static ValidationError AlreadyExists(ErrorContext errorContext, string? userMessage = null)
+    {
+        ArgumentNullException.ThrowIfNull(errorContext);
+        return Create(errorContext, ErrorCodeReasons.AlreadyExists, ValidationErrorType.AlreadyExists,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The {errorContext.EntityName} already exists."
                 : $"A {errorContext.EntityName} with that {errorContext.FieldName} already exists.", userMessage);
+    }
 
     /// <summary>Creates a validation error for two values that do not match.</summary>
     public static ValidationError NonMatchingValues(ErrorContext errorContext, string? confirmFieldName = null, string? userMessage = null)
     {
+        ArgumentNullException.ThrowIfNull(errorContext);
         var message = !string.IsNullOrWhiteSpace(errorContext.FieldName) && !string.IsNullOrWhiteSpace(confirmFieldName)
             ? $"The values for '{errorContext.FieldName}' and '{confirmFieldName}' do not match."
             : "The provided values do not match.";

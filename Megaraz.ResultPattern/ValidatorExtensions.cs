@@ -113,7 +113,14 @@ namespace Megaraz.ResultPattern
 
             if (!string.Equals(value1, value2, StringComparison.Ordinal))
             {
-                notMatchingError = ValidationError.NonMatchingValues(errorContext with { FieldName = fieldName }, confirmFieldName);
+                string resolvedFieldName = string.IsNullOrWhiteSpace(fieldName)
+                    ? errorContext.FieldName ?? nameof(value1)
+                    : fieldName;
+                string resolvedConfirmFieldName = string.IsNullOrWhiteSpace(confirmFieldName)
+                    ? errorContext.FieldName ?? nameof(value2)
+                    : confirmFieldName;
+                notMatchingError = ValidationError.NonMatchingValues(
+                    errorContext with { FieldName = resolvedFieldName }, resolvedConfirmFieldName);
                 return true;
             }
 
