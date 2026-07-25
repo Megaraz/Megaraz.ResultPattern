@@ -50,7 +50,7 @@ public class ValidatorExtensionsTests
         "".IsNullOrWhiteSpace(" ", TestData.FieldContext, out var contextError);
         Assert.Equal("Email", contextError.FieldName);
         "".IsNullOrWhiteSpace(" ", TestData.Context, out var fallbackError);
-        Assert.Equal("value", fallbackError.FieldName);
+        Assert.Null(fallbackError.FieldName);
     }
 
     [Fact]
@@ -76,6 +76,31 @@ public class ValidatorExtensionsTests
         Assert.False("a".DoesNotMatch("a", "First", "Second", TestData.Context, out var none));
         Assert.Null(none);
         Assert.Throws<ArgumentNullException>(() => "a".DoesNotMatch("a", "First", "Second", null!, out _));
+    }
+
+    [Fact]
+    public void ValidateMethodsReturnNullWhenValuesAreValid()
+    {
+        Assert.Null("ok".ValidateRequired(TestData.Context));
+        Assert.Empty(new (string FieldName, string? Value)[] { ("First", "ok") }
+            .ValidateRequiredFields(TestData.Context));
+        Assert.Null("a".ValidateDoesNotMatch("a", "First", "Second", TestData.Context));
+    }
+
+    [Fact]
+    public void ValidateMethodsReturnClearErrorsWhenValuesAreInvalid()
+    {
+        var required = ((string?)null).ValidateRequired(TestData.Context);
+        Assert.NotNull(required);
+        Assert.Null(required!.FieldName);
+
+        var fields = new[] { ("First", (string?)null), ("Second", " ") }
+            .ValidateRequiredFields(TestData.Context);
+        Assert.Equal(new[] { "First", "Second" }, fields.Select(error => error.FieldName));
+
+        var mismatch = "a".ValidateDoesNotMatch("b", null, null, TestData.Context);
+        Assert.NotNull(mismatch);
+        Assert.Null(mismatch!.FieldName);
     }
 
     [Fact]

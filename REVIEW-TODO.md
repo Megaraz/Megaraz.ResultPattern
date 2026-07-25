@@ -84,7 +84,7 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
   - Completed: `ToString()` now returns a concise `Code: Description` diagnostic
     representation without the previous labeled multi-line format.
 
-- [ ] **P1 — Improve validation API ergonomics**
+- [x] **P1 — Improve validation API ergonomics**
   - Reassess methods that return `true` when validation fails despite names that
     look like ordinary predicates.
   - Consider clearer `TryValidate...`/`Validate...` APIs.
@@ -92,6 +92,10 @@ belong in extension packages such as `Megaraz.ResultPattern.AspNetCore`.
   - Decide whether `DoesNotMatch` should also perform required checks or whether
     those should be separate validations.
   - Validate arguments such as `expectedFormat` and `range`.
+  - Completed: added null-returning `ValidateRequired`, `ValidateRequiredFields`,
+    and `ValidateDoesNotMatch` APIs while retaining the legacy boolean methods;
+    required checks remain first-class behavior for matching validation, field
+    fallback no longer uses `"value"`, and blank format/range descriptors are rejected.
 
 - [ ] **P2 — Make collection contracts express ordering**
   - Consider exposing `ValidationErrors` as `IReadOnlyList<ValidationError>` since

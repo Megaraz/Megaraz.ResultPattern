@@ -47,6 +47,18 @@ assume a presentation language: `UserMessage` is empty unless supplied. Use the
 optional `messageFactory` argument to create localized or application-specific
 descriptions in an extension or application layer.
 
+For validation, the `Validate...` methods return a `ValidationError` when a
+check fails and `null` when it passes:
+
+```csharp
+var error = email.ValidateRequired(context, "Email");
+if (error is not null)
+    return Result.Failure(error);
+```
+
+The existing boolean validation methods remain available for compatibility and
+return `true` when the invalid condition is detected.
+
 Install from NuGet:
 
 ```bash

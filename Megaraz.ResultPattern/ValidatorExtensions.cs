@@ -11,6 +11,83 @@ namespace Megaraz.ResultPattern
     /// </remarks>
     public static class ValidatorExtensions
     {
+        /// <summary>
+        /// Returns the required-value validation error, or <see langword="null"/> when
+        /// <paramref name="value"/> contains content.
+        /// </summary>
+        public static ValidationError? ValidateRequired(
+            this string? value,
+            ErrorContext errorContext,
+            string? fieldName = null)
+        {
+            ArgumentNullException.ThrowIfNull(errorContext);
+
+            if (!string.IsNullOrWhiteSpace(value))
+                return null;
+
+            var resolvedFieldName = string.IsNullOrWhiteSpace(fieldName)
+                ? errorContext.FieldName
+                : fieldName;
+
+            return ValidationError.Required(errorContext with { FieldName = resolvedFieldName });
+        }
+
+        /// <summary>
+        /// Returns required-value validation errors in input order.
+        /// </summary>
+        public static IReadOnlyList<ValidationError> ValidateRequiredFields(
+            this IEnumerable<(string FieldName, string? Value)> requiredValues,
+            ErrorContext errorContext)
+        {
+            ArgumentNullException.ThrowIfNull(requiredValues);
+            ArgumentNullException.ThrowIfNull(errorContext);
+
+            var errors = new List<ValidationError>();
+            foreach (var (fieldName, value) in requiredValues)
+            {
+                var error = value.ValidateRequired(errorContext, fieldName);
+                if (error is not null)
+                    errors.Add(error);
+            }
+
+            return errors;
+        }
+
+        /// <summary>
+        /// Returns a validation error when the values do not match, or
+        /// <see langword="null"/> when they match. Required checks are performed first.
+        /// </summary>
+        public static ValidationError? ValidateDoesNotMatch(
+            this string? value1,
+            string? value2,
+            string? fieldName,
+            string? confirmFieldName,
+            ErrorContext errorContext)
+        {
+            ArgumentNullException.ThrowIfNull(errorContext);
+
+            var value1Error = value1.ValidateRequired(errorContext, fieldName);
+            if (value1Error is not null)
+                return value1Error;
+
+            var value2Error = value2.ValidateRequired(errorContext, confirmFieldName);
+            if (value2Error is not null)
+                return value2Error;
+
+            if (string.Equals(value1, value2, StringComparison.Ordinal))
+                return null;
+
+            var resolvedFieldName = string.IsNullOrWhiteSpace(fieldName)
+                ? errorContext.FieldName
+                : fieldName;
+            var resolvedConfirmFieldName = string.IsNullOrWhiteSpace(confirmFieldName)
+                ? errorContext.FieldName
+                : confirmFieldName;
+
+            return ValidationError.NonMatchingValues(
+                errorContext with { FieldName = resolvedFieldName },
+                resolvedConfirmFieldName);
+        }
 
         /// <summary>
         /// Returns <see langword="true"/> if any field in <paramref name="requiredValues"/> is null or whitespace
@@ -26,16 +103,8 @@ namespace Megaraz.ResultPattern
             ArgumentNullException.ThrowIfNull(requiredValues);
             ArgumentNullException.ThrowIfNull(errorContext);
 
-            var errors = new List<ValidationError>();
-
-            foreach (var (fieldName, value) in requiredValues)
-            {
-                if (value.IsNullOrWhiteSpace(fieldName, errorContext, out var error))
-                    errors.Add(error);
-            }
-
-            validationErrors = errors;
-            return errors.Count > 0;
+            validationErrors = requiredValues.ValidateRequiredFields(errorContext);
+            return validationErrors.Count > 0;
         }
 
         /// <summary>
@@ -49,15 +118,8 @@ namespace Megaraz.ResultPattern
 
             nullOrEmptyError = default!;
 
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                string resolvedFieldName = string.IsNullOrWhiteSpace(fieldName) ? errorContext.FieldName ?? nameof(value) : fieldName;
-
-                nullOrEmptyError = ValidationError.Required(errorContext with { FieldName = resolvedFieldName });
-                return true;
-            }
-
-            return false;
+            nullOrEmptyError = value.ValidateRequired(errorContext, fieldName)!;
+            return nullOrEmptyError is not null;
         }
 
         /// <summary>
@@ -70,15 +132,8 @@ namespace Megaraz.ResultPattern
         {
             ArgumentNullException.ThrowIfNull(errorContext);
 
-            nullOrEmptyError = default!;
-
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                nullOrEmptyError = ValidationError.Required(errorContext);
-                return true;
-            }
-
-            return false;
+            nullOrEmptyError = value.ValidateRequired(errorContext)!;
+            return nullOrEmptyError is not null;
         }
 
         /// <summary>
@@ -97,34 +152,9 @@ namespace Megaraz.ResultPattern
         {
             ArgumentNullException.ThrowIfNull(errorContext);
 
-            notMatchingError = default!;
-
-            if (value1.IsNullOrWhiteSpace(fieldName, errorContext, out var value1Error))
-            {
-                notMatchingError = value1Error;
-                return true;
-            }
-
-            if (value2.IsNullOrWhiteSpace(confirmFieldName, errorContext, out var value2Error))
-            {
-                notMatchingError = value2Error;
-                return true;
-            }
-
-            if (!string.Equals(value1, value2, StringComparison.Ordinal))
-            {
-                string resolvedFieldName = string.IsNullOrWhiteSpace(fieldName)
-                    ? errorContext.FieldName ?? nameof(value1)
-                    : fieldName;
-                string resolvedConfirmFieldName = string.IsNullOrWhiteSpace(confirmFieldName)
-                    ? errorContext.FieldName ?? nameof(value2)
-                    : confirmFieldName;
-                notMatchingError = ValidationError.NonMatchingValues(
-                    errorContext with { FieldName = resolvedFieldName }, resolvedConfirmFieldName);
-                return true;
-            }
-
-            return false;
+            notMatchingError = value1.ValidateDoesNotMatch(
+                value2, fieldName, confirmFieldName, errorContext)!;
+            return notMatchingError is not null;
         }
 
     }

@@ -114,6 +114,10 @@ public class ValidationErrorTests
         Assert.Throws<ArgumentNullException>(() => ValidationError.TooLong(null!, "x"));
         Assert.Throws<ArgumentNullException>(() => ValidationError.AlreadyExists(null!));
         Assert.Throws<ArgumentNullException>(() => ValidationError.NonMatchingValues(null!));
+        Assert.Throws<ArgumentException>(() => ValidationError.InvalidFormat(TestData.Context, ""));
+        Assert.Throws<ArgumentException>(() => ValidationError.OutOfRange(TestData.Context, " "));
+        Assert.Throws<ArgumentException>(() => ValidationError.TooShort(TestData.Context, ""));
+        Assert.Throws<ArgumentException>(() => ValidationError.TooLong(TestData.Context, " "));
     }
 
     [Fact]

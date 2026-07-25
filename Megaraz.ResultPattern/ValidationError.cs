@@ -102,6 +102,7 @@ public sealed record ValidationError : Error
         Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
+        ValidateDescriptor(expectedFormat, nameof(expectedFormat));
         return Create(errorContext, ErrorCodeReasons.InvalidFormat, ValidationErrorType.InvalidFormat,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value has an invalid format. Expected format: {expectedFormat}."
@@ -117,6 +118,7 @@ public sealed record ValidationError : Error
         Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
+        ValidateDescriptor(range, nameof(range));
         return Create(errorContext, ErrorCodeReasons.OutOfRange, ValidationErrorType.OutOfRange,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value is out of range. Expected range: {range}."
@@ -132,6 +134,7 @@ public sealed record ValidationError : Error
         Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
+        ValidateDescriptor(range, nameof(range));
         return Create(errorContext, ErrorCodeReasons.TooShort, ValidationErrorType.TooShort,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value is too short. Expected minimum length: {range}."
@@ -147,6 +150,7 @@ public sealed record ValidationError : Error
         Func<ErrorContext, string>? messageFactory = null)
     {
         ArgumentNullException.ThrowIfNull(errorContext);
+        ValidateDescriptor(range, nameof(range));
         return Create(errorContext, ErrorCodeReasons.TooLong, ValidationErrorType.TooLong,
             string.IsNullOrWhiteSpace(errorContext.FieldName)
                 ? $"The provided value is too long. Expected maximum length: {range}."
@@ -198,5 +202,11 @@ public sealed record ValidationError : Error
             throw new ArgumentException("The message factory must return a non-blank message.", nameof(messageFactory));
 
         return new(code.Code, description, type, userMessage ?? string.Empty, context.FieldName);
+    }
+
+    private static void ValidateDescriptor(string? descriptor, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(descriptor))
+            throw new ArgumentException("The validation descriptor cannot be null, empty, or whitespace.", parameterName);
     }
 }
