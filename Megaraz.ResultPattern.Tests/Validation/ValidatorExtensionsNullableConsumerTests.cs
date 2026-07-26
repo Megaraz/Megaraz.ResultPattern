@@ -6,7 +6,7 @@ namespace Megaraz.ResultPattern.Tests.Validation;
 public class ValidatorExtensionsNullableConsumerTests
 {
     [Fact]
-    public void BooleanValidatorsExposeBranchAwareNullabilityToConsumers()
+    public void BooleanValidatorsPreserveThePublishedNonNullableOutContracts()
     {
         const string source = """
             #nullable enable
@@ -51,7 +51,7 @@ public class ValidatorExtensionsNullableConsumerTests
         var diagnostics = compilation.GetDiagnostics();
 
         Assert.DoesNotContain(diagnostics, diagnostic => diagnostic.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(3, diagnostics.Count(diagnostic => diagnostic.Id == "CS8602"));
+        Assert.DoesNotContain(diagnostics, diagnostic => diagnostic.Id == "CS8602");
     }
 
     private static IEnumerable<MetadataReference> GetMetadataReferences()

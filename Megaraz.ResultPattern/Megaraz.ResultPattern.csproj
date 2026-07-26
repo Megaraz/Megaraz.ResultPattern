@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>Megaraz.ResultPattern</PackageId>
-    <Version>0.2.3</Version>
+    <Version>0.2.2</Version>
     <Title>Megaraz Result Pattern</Title>
     <Description>A focused Result Pattern library for .NET.</Description>
     <Authors>Megaraz</Authors>
@@ -16,7 +16,7 @@
     <PackageProjectUrl>https://github.com/Megaraz/Megaraz.ResultPattern</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>result;result-pattern;errors;validation</PackageTags>
-    <PackageReleaseNotes>0.2.3: Adds portable symbol packages, Source Link verification, package-content validation, CI artifact retention, and immutable GitHub Actions pins for release workflows.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.2.2: Combines the pending post-0.2.1 maintenance changes: validation and error-context invariant fixes, clearer validation and security documentation, package metadata and release-version validation, portable symbol packages, Source Link and package-content verification, CI artifact retention, and immutable GitHub Actions pins. The boolean validation out-parameter nullable annotations remain unchanged from 0.2.1 for source compatibility; their values are meaningful only when the method returns true.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
