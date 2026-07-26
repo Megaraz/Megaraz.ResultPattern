@@ -105,4 +105,4 @@ Do not include exploit details in public issues.
 
 ## License
 
-Megaraz.ResultPattern is licensed under the [MIT License](LICENSE).
+Megaraz.ResultPattern is licensed under the [MIT License](https://github.com/Megaraz/Megaraz.ResultPattern/blob/main/LICENSE).
