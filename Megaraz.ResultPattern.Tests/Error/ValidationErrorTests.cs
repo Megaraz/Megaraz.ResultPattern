@@ -3,14 +3,16 @@ namespace Megaraz.ResultPattern.Tests.Error;
 public class ValidationErrorTests
 {
     [Fact]
-    public void CustomFactoriesPreserveDescriptionAndResolveMessagesAndFields()
+    public void CustomFactoriesKeepTechnicalDescriptionsOutOfUserMessagesByDefault()
     {
         var context = TestData.FieldContext;
-        var custom = ValidationError.Custom(context, "description");
+        const string sensitiveDescription = "Connection string: Server=internal;Password=secret";
+
+        var custom = ValidationError.Custom(context, sensitiveDescription);
         Assert.Equal("Update.User.Custom", custom.Code);
         Assert.Equal(ValidationErrorType.Custom, custom.ValidationErrorType);
-        Assert.Equal("description", custom.Description);
-        Assert.Equal("description", custom.UserMessage);
+        Assert.Equal(sensitiveDescription, custom.Description);
+        Assert.Empty(custom.UserMessage);
         Assert.Equal("Email", custom.FieldName);
 
         var owned = ValidationError.Custom(context, ErrorCode.From("owned"), "description", "friendly", "Name");
@@ -18,8 +20,15 @@ public class ValidationErrorTests
         Assert.Equal("friendly", owned.UserMessage);
         Assert.Equal("Name", owned.FieldName);
 
+        var ownedWithNullMessage = ValidationError.Custom(context, ErrorCode.From("owned-null"), "description", null);
+        Assert.Empty(ownedWithNullMessage.UserMessage);
+
         var reason = ValidationError.CustomWithReason(context, "Specific", "details");
         Assert.Equal("Update.User.Specific", reason.Code);
+        Assert.Empty(reason.UserMessage);
+
+        var reasonWithNullMessage = ValidationError.CustomWithReason(context, "SpecificNull", "details", null);
+        Assert.Empty(reasonWithNullMessage.UserMessage);
     }
 
     [Theory]

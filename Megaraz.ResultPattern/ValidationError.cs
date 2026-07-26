@@ -42,7 +42,9 @@ public sealed record ValidationError : Error
         FieldName = fieldName;
     }
 
-    /// <summary>Creates a custom validation error with caller-provided wording.</summary>
+    /// <summary>
+    /// Creates a custom validation error with caller-provided wording. The user-facing message is empty unless explicitly supplied.
+    /// </summary>
     public static ValidationError Custom(
         ErrorContext errorContext,
         string description = "A custom validation error occurred.",
@@ -53,10 +55,12 @@ public sealed record ValidationError : Error
         var code = ErrorCode.For(errorContext, "Custom");
         var resolvedFieldName = fieldName ?? errorContext.FieldName;
         return new(code.Code, description, ValidationErrorType.Custom,
-            userMessage ?? description, resolvedFieldName);
+            userMessage ?? string.Empty, resolvedFieldName);
     }
 
-    /// <summary>Creates a custom validation error with a caller-owned stable code.</summary>
+    /// <summary>
+    /// Creates a custom validation error with a caller-owned stable code. The user-facing message is empty unless explicitly supplied.
+    /// </summary>
     public static ValidationError Custom(
         ErrorContext errorContext,
         ErrorCode code,
@@ -68,10 +72,12 @@ public sealed record ValidationError : Error
         ArgumentNullException.ThrowIfNull(code);
         var resolvedFieldName = fieldName ?? errorContext.FieldName;
         return new(code.Code, description, ValidationErrorType.Custom,
-            userMessage ?? description, resolvedFieldName);
+            userMessage ?? string.Empty, resolvedFieldName);
     }
 
-    /// <summary>Creates a custom validation error using the optional conventional code shape.</summary>
+    /// <summary>
+    /// Creates a custom validation error using the optional conventional code shape. The user-facing message is empty unless explicitly supplied.
+    /// </summary>
     public static ValidationError CustomWithReason(
         ErrorContext errorContext,
         string reason,
