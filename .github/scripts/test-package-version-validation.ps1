@@ -103,3 +103,7 @@ finally {
         Remove-Item -LiteralPath $testRoot -Recurse -Force
     }
 }
+
+# The final negative case intentionally invokes a failing child process. Do not
+# let that expected child exit code determine this script's successful outcome.
+$global:LASTEXITCODE = 0
