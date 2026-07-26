@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>Megaraz.ResultPattern</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Title>Megaraz Result Pattern</Title>
     <Description>A focused Result Pattern library for .NET.</Description>
     <Authors>Megaraz</Authors>
@@ -16,7 +16,7 @@
     <PackageProjectUrl>https://github.com/Megaraz/Megaraz.ResultPattern</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>result;result-pattern;errors;validation</PackageTags>
-    <PackageReleaseNotes>Added ErrorType.External for extension-package and external-dependency errors.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.2.1: Fixed custom validation errors so diagnostic descriptions are not exposed through UserMessage unless explicitly supplied. ErrorContext now enforces its operation, entity-name, and field-name invariants in record with expressions.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

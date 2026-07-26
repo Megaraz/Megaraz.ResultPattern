@@ -73,12 +73,37 @@ public class ErrorContextTests
     }
 
     [Fact]
-    public void ConventionalCodesRejectInvalidWithCopies()
+    public void WithRejectsInvalidOperation()
     {
-        var context = new ErrorContext(OperationType.Get, "User") with { EntityName = "" };
+        var context = new ErrorContext(OperationType.Get, "User");
 
-        var ex = Assert.Throws<ArgumentException>(() => ErrorCode.For(context, ErrorCodeReasons.NotFound));
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => context with { Operation = (OperationType)999 });
+
+        Assert.Equal("operation", ex.ParamName);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("User.Profile")]
+    public void WithRejectsInvalidEntityName(string entityName)
+    {
+        var context = new ErrorContext(OperationType.Get, "User");
+
+        var ex = Assert.Throws<ArgumentException>(() => context with { EntityName = entityName });
 
         Assert.Equal("entityName", ex.ParamName);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void WithRejectsBlankFieldName(string fieldName)
+    {
+        var context = new ErrorContext(OperationType.Get, "User");
+
+        var ex = Assert.Throws<ArgumentException>(() => context with { FieldName = fieldName });
+
+        Assert.Equal("fieldName", ex.ParamName);
     }
 }

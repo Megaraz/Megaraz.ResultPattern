@@ -5,6 +5,10 @@ namespace Megaraz.ResultPattern;
 /// </summary>
 public record ErrorContext
 {
+    private OperationType _operation;
+    private string _entityName = null!;
+    private string? _fieldName;
+
     /// <summary>
     /// Initializes an error context.
     /// </summary>
@@ -23,13 +27,37 @@ public record ErrorContext
     }
 
     /// <summary>Gets the kind of operation being performed.</summary>
-    public OperationType Operation { get; init; }
+    public OperationType Operation
+    {
+        get => _operation;
+        init
+        {
+            ValidateOperation(value);
+            _operation = value;
+        }
+    }
 
     /// <summary>Gets the logical entity or resource involved.</summary>
-    public string EntityName { get; init; }
+    public string EntityName
+    {
+        get => _entityName;
+        init
+        {
+            ValidateEntityName(value);
+            _entityName = value;
+        }
+    }
 
     /// <summary>Gets the optional property or field label involved.</summary>
-    public string? FieldName { get; init; }
+    public string? FieldName
+    {
+        get => _fieldName;
+        init
+        {
+            ValidateFieldName(value);
+            _fieldName = value;
+        }
+    }
 
     internal void Validate()
     {

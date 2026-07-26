@@ -54,12 +54,17 @@ var error = Error.Custom(
 `ErrorContext` requires a defined operation and a non-blank logical entity or
 resource name. Its optional `FieldName` is metadata for validation and
 presentation; it is not part of conventional error codes and may use labels
-such as `Profile.Email`.
+such as `Profile.Email`. These invariants are enforced during construction and
+when creating record copies with `with` expressions.
 
 Built-in error factories provide technical fallback descriptions, but do not
 assume a presentation language: `UserMessage` is empty unless supplied. Use the
 optional `messageFactory` argument to create localized or application-specific
 descriptions in an extension or application layer.
+
+Custom validation factories follow the same safe default: their `description`
+is diagnostic detail and is not copied to `UserMessage`. Supply `userMessage`
+explicitly when a presentation-safe message is intended.
 
 For validation, the `Validate...` methods return a `ValidationError` when a
 check fails and `null` when it passes:
