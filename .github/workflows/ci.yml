@@ -32,6 +32,10 @@ jobs:
         shell: pwsh
         run: ./.github/scripts/test-package-version-validation.ps1
 
+      - name: Test Source Link verification
+        shell: pwsh
+        run: ./.github/scripts/test-sourcelink-symbols.ps1
+
       - name: Restore dependencies
         run: dotnet restore Megaraz.ResultPattern.slnx
 
@@ -63,12 +67,7 @@ jobs:
             [System.IO.Compression.ZipFile]::ExtractToDirectory(
               (Resolve-Path artifacts/Megaraz.ResultPattern.*.snupkg),
               $symbolDirectory)
-            Get-ChildItem -LiteralPath $symbolDirectory -Filter Megaraz.ResultPattern.pdb -Recurse |
-              ForEach-Object { & ./.tools/sourcelink test $_.FullName }
-
-            if ($LASTEXITCODE -ne 0) {
-              exit $LASTEXITCODE
-            }
+            ./.github/scripts/verify-sourcelink-symbols.ps1 -SymbolDirectory $symbolDirectory -SourceLinkExecutable ./.tools/sourcelink
           }
           finally {
             Remove-Item -LiteralPath $symbolDirectory -Recurse -Force -ErrorAction SilentlyContinue

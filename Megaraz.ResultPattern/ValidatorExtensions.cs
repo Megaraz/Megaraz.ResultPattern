@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Megaraz.ResultPattern
 {
     /// <summary>
@@ -109,36 +111,37 @@ namespace Megaraz.ResultPattern
 
         /// <summary>
         /// Returns <see langword="true"/> if <paramref name="value"/> is null or whitespace
-        /// and populates <paramref name="nullOrEmptyError"/>. Returns <see langword="false"/> otherwise.
+        /// and populates <paramref name="nullOrEmptyError"/>. Returns <see langword="false"/> otherwise,
+        /// with <paramref name="nullOrEmptyError"/> set to <see langword="null"/>.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="errorContext"/> is <see langword="null"/>.</exception>
-        public static bool IsNullOrWhiteSpace(this string? value, string fieldName, ErrorContext errorContext, out ValidationError nullOrEmptyError)
+        public static bool IsNullOrWhiteSpace(this string? value, string fieldName, ErrorContext errorContext, [NotNullWhen(true)] out ValidationError? nullOrEmptyError)
         {
             ArgumentNullException.ThrowIfNull(errorContext);
 
-            nullOrEmptyError = default!;
-
-            nullOrEmptyError = value.ValidateRequired(errorContext, fieldName)!;
+            nullOrEmptyError = value.ValidateRequired(errorContext, fieldName);
             return nullOrEmptyError is not null;
         }
 
         /// <summary>
         /// Returns <see langword="true"/> if <paramref name="value"/> is null or whitespace
-        /// and populates <paramref name="nullOrEmptyError"/>. Returns <see langword="false"/> otherwise.
+        /// and populates <paramref name="nullOrEmptyError"/>. Returns <see langword="false"/> otherwise,
+        /// with <paramref name="nullOrEmptyError"/> set to <see langword="null"/>.
         /// Uses <see cref="ErrorContext.FieldName"/> as the field label in the error description.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="errorContext"/> is <see langword="null"/>.</exception>
-        public static bool IsNullOrWhiteSpace(this string? value, ErrorContext errorContext, out ValidationError nullOrEmptyError)
+        public static bool IsNullOrWhiteSpace(this string? value, ErrorContext errorContext, [NotNullWhen(true)] out ValidationError? nullOrEmptyError)
         {
             ArgumentNullException.ThrowIfNull(errorContext);
 
-            nullOrEmptyError = value.ValidateRequired(errorContext)!;
+            nullOrEmptyError = value.ValidateRequired(errorContext);
             return nullOrEmptyError is not null;
         }
 
         /// <summary>
         /// Returns <see langword="true"/> if <paramref name="value1"/> and <paramref name="value2"/> do <b>not</b> match
-        /// and populates <paramref name="notMatchingError"/>. Returns <see langword="false"/> if they match.
+        /// and populates <paramref name="notMatchingError"/>. Returns <see langword="false"/> if they match,
+        /// with <paramref name="notMatchingError"/> set to <see langword="null"/>.
         /// Comparison is ordinal (case-sensitive).
         /// </summary>
         /// <param name="fieldName">Label for <paramref name="value1"/>, used in error descriptions.</param>
@@ -148,12 +151,12 @@ namespace Megaraz.ResultPattern
         /// <param name="errorContext">The context used to create the validation error.</param>
         /// <param name="notMatchingError">The resulting validation error when the values do not match.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="errorContext"/> is <see langword="null"/>.</exception>
-        public static bool DoesNotMatch(this string? value1, string? value2, string fieldName, string confirmFieldName, ErrorContext errorContext, out ValidationError notMatchingError)
+        public static bool DoesNotMatch(this string? value1, string? value2, string fieldName, string confirmFieldName, ErrorContext errorContext, [NotNullWhen(true)] out ValidationError? notMatchingError)
         {
             ArgumentNullException.ThrowIfNull(errorContext);
 
             notMatchingError = value1.ValidateDoesNotMatch(
-                value2, fieldName, confirmFieldName, errorContext)!;
+                value2, fieldName, confirmFieldName, errorContext);
             return notMatchingError is not null;
         }
 
