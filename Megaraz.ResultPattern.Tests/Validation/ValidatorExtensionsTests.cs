@@ -40,16 +40,16 @@ public class ValidatorExtensionsTests
         var context = new ErrorContext(OperationType.Create, "User", "ContextField");
         var result = value.IsNullOrWhiteSpace("Explicit", context, out var error);
         Assert.Equal(invalid, result);
-        if (invalid) Assert.Equal("Explicit", error.FieldName);
+        if (invalid) Assert.Equal("Explicit", error!.FieldName);
         else Assert.Null(error);
     }
 
     [Fact]
     public void IsNullOrWhiteSpaceFieldFallbackUsesContextThenValue()
     {
-        "".IsNullOrWhiteSpace(" ", TestData.FieldContext, out var contextError);
+        Assert.True("".IsNullOrWhiteSpace(" ", TestData.FieldContext, out var contextError));
         Assert.Equal("Email", contextError.FieldName);
-        "".IsNullOrWhiteSpace(" ", TestData.Context, out var fallbackError);
+        Assert.True("".IsNullOrWhiteSpace(" ", TestData.Context, out var fallbackError));
         Assert.Null(fallbackError.FieldName);
     }
 
