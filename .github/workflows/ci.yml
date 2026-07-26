@@ -28,6 +28,10 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Validate publish version checks
+        shell: pwsh
+        run: ./.github/scripts/test-package-version-validation.ps1
+
       - name: Restore dependencies
         run: dotnet restore Megaraz.ResultPattern.slnx
 
