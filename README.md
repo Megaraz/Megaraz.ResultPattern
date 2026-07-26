@@ -15,6 +15,19 @@ if (result.IsSuccess)
 Successful `Result<TValue>` instances require a non-null value. Failed results expose a
 `PrimaryError`, while validation failures also expose their `ValidationErrors`.
 
+## Support and compatibility
+
+The package supports .NET 8, .NET 9, and .NET 10. It follows semantic
+versioning: patch releases contain compatible fixes, minor releases may add
+backward-compatible functionality, and major releases may contain breaking
+changes. Error codes are machine-readable contracts and should be treated as
+stable by consumers.
+
+Use this core package for framework-agnostic result and error modeling. Use an
+extension package when an integration needs framework, transport, persistence,
+or other external-system details; those details intentionally do not belong in
+the core package.
+
 ## Error codes
 
 Built-in factories retain conventional codes such as `Create.User.NotFound`. For
@@ -72,7 +85,7 @@ check fails and `null` when it passes:
 ```csharp
 var error = email.ValidateRequired(context, "Email");
 if (error is not null)
-    return Result.Failure(error);
+    return Result.ValidationFailure([error]);
 ```
 
 The existing boolean validation methods remain available for compatibility and
@@ -83,3 +96,13 @@ Install from NuGet:
 ```bash
 dotnet add package Megaraz.ResultPattern
 ```
+
+## Security
+
+Please report suspected vulnerabilities privately through [GitHub Security
+Advisories](https://github.com/Megaraz/Megaraz.ResultPattern/security/advisories/new).
+Do not include exploit details in public issues.
+
+## License
+
+Megaraz.ResultPattern is licensed under the [MIT License](LICENSE).
